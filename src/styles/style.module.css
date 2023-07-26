@@ -1,0 +1,6 @@
+.column{
+    border-top: 5px solid black;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
