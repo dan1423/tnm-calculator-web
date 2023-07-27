@@ -1,7 +1,7 @@
 {
   "name": "tnm-calculator-web",
   "version": "0.1.0",
-  "homepage": "https://daniel-oluwadare-ajcc.github.io/tnm-calculator-web",
+  "homepage": "https://dan1423.github.io/tnm-calculator-web",
   "private": true,
   "scripts": {
     "predeploy": "npm run build",
