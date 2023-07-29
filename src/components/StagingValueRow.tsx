@@ -44,7 +44,7 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
         </div>
         <div style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
           
-          <p style={{overflow:'auto',marginTop:2,backgroundColor: '#e6f3ff',height:100,padding:10}}>
+          <p style={{overflow:'auto',marginTop:2,backgroundColor: '#e6f3ff',height:100,padding:10,}}>
             {dropdownLabel == null
               ?<i style={{color:'red'}}>select criteria from dropdown above</i> 
               : dropdownLabel}
