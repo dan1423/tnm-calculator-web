@@ -9,6 +9,10 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
 
   const handleValueChange = (itemValue, index) => {
     setDropdownValue(itemValue);
+    if(itemValue=="none"){
+      return;
+    } 
+    index = index - 1;
     setDropdownLabel(prop.ValueDescList[index].Descr);
     let obj = { ColumnName: prop.ColumnName, ValidValue: itemValue };
     handleStagingCriteriaSelect(obj);
@@ -18,17 +22,17 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
       <div style={{ flex: 1}} className={customStyle.column}>
         <p style={styles.textSize}>{prop == null ? '' : prop.ColumnTitle}</p>
       </div>
-      <div style={{ flex: 4}} className={customStyle.column}>
+      <div style={{ flex: 10}} className={customStyle.column}>
         <div>
           <select
           className='outline-double bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
           style={{width: '100%'}}
-            value={dropdownValue == null ? '...' : dropdownValue}
+            value={dropdownValue == null ? '' : dropdownValue}
             onChange={(event) => handleValueChange(event.target.value, event.target.selectedIndex)}
           >
-            <option value="...">None</option>
+            <option value="none">None</option>
             {prop == null ? (
-              <option value="..."></option>
+              <option value="none"></option>
             ) : (
               prop.ValueDescList.map((item, index) => (
                 <option value={item.ValidValue} key={index}>
@@ -47,7 +51,7 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
           </p>
         </div>
       </div>
-      <div style={{flex:1,paddingLeft:50}} className={customStyle.column}>
+      <div style={{flex:1,paddingLeft:30}} className={customStyle.column}>
         <p style={styles.textSize}>{dropdownValue == null ? '...' : dropdownValue}</p>
       </div>
     </div>
