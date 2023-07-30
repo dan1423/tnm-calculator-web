@@ -19,7 +19,7 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
   };
   return (
     <div style={styles.container} >
-      <div style={{ flex: 1}} className={customStyle.column}>
+      <div style={{ flex: 2,paddingRight:20}} className={customStyle.column}>
         <p style={styles.textSize}>{prop == null ? '' : prop.ColumnTitle}</p>
       </div>
       <div style={{ flex: 10}} className={customStyle.column}>
@@ -42,9 +42,9 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
             )}
           </select>
         </div>
-        <div style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ justifyContent: 'center', alignItems: 'center',height:'80%' }}>
           
-          <p style={{overflow:'auto',marginTop:2,backgroundColor: '#e6f3ff',height:100,padding:10,}}>
+          <p style={{overflow:'auto',marginTop:2,backgroundColor: '#191970',height:100,padding:10,color:'#fff'}}>
             {dropdownLabel == null
               ?<i style={{color:'red'}}>select criteria from dropdown above</i> 
               : dropdownLabel}
