@@ -31,7 +31,8 @@ const StagingCalculator = () => {
     const handleDiseaseSelect = (itemValue, index) => {
         setDropdownValue(itemValue);
         if(itemValue == null || itemValue == '')return;
-        fetch(`https://dan1423-001-site1.btempurl.com/tnmstaging/staging-data-items-v2/${itemValue}/1`) // Replace 'api' with the actual endpoint to fetch staging data
+        let currentDiseaseUrl = `https://dan1423-001-site1.btempurl.com/tnmstaging/staging-data-items-v2/${itemValue}/1`;
+        fetch(currentDiseaseUrl) // Replace 'api' with the actual endpoint to fetch staging data
             .then(response => response.json())
             .then(data => {
                 setStagingData(data);
@@ -40,17 +41,14 @@ const StagingCalculator = () => {
             .catch(error => {
                 console.error('Error fetching dropdown data:', error);
             });
-            
              setStagingUrl( encodeURI(`${BASE_URL}/tnmstaging/calculate?diseaseId=${itemValue}&stagingTypeId=1`));
     };
 
 
 
     const handleStagingCriteriaSelect = (obj) => {
-    
         const updateList = (list = [], updatedObject) => {
             const index = list.findIndex(item => item.ColumnName === updatedObject.ColumnName);
-      
             if (index !== -1) {
               list.splice(index, 1, updatedObject);
             } else {
@@ -72,7 +70,7 @@ const StagingCalculator = () => {
           });
 
           fetch(partialUrl)
-            .then(response => response.json())
+            .then(response => response.text())
             .then(data => {
               if (data.includes('The given data does not a produce a stage')) {
                setCalculatedStage('...');
@@ -84,7 +82,6 @@ const StagingCalculator = () => {
               console.error('Error fetching dropdown data:', error);
             });
     };
-
 
     return (
         <div className='container mx-auto'>
@@ -100,12 +97,11 @@ const StagingCalculator = () => {
                         <option value="">loading...</option>
                     ) :
                     diseaseSites.map((item, index) => (
-                            <option value={item.AJCCDiseaseId} key={index}>
-                                {item.DiseaseTitle}
+                            <option value={item.ajccDiseaseId} key={index}>
+                                {item.diseaseTitle}
                             </option> 
                         ))
                     }
-                 
                 </select>
 
             </div>

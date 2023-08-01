@@ -13,14 +13,14 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
       return;
     } 
     index = index - 1;
-    setDropdownLabel(prop.ValueDescList[index].Descr);
-    let obj = { ColumnName: prop.ColumnName, ValidValue: itemValue };
+    setDropdownLabel(prop.valueDescList[index].descr);
+    let obj = { ColumnName: prop.columnName, ValidValue: itemValue };
     handleStagingCriteriaSelect(obj);
   };
   return (
     <div style={styles.container} >
       <div style={{ flex: 2,paddingRight:20}} className={customStyle.column}>
-        <p style={styles.textSize}>{prop == null ? '' : prop.ColumnTitle}</p>
+        <p style={styles.textSize}>{prop == null ? '' : prop.columnTitle}</p>
       </div>
       <div style={{ flex: 10}} className={customStyle.column}>
         <div>
@@ -34,9 +34,9 @@ const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
             {prop == null ? (
               <option value="none"></option>
             ) : (
-              prop.ValueDescList.map((item, index) => (
-                <option value={item.ValidValue} key={index}>
-                  {item.Descr}
+              prop.valueDescList.map((item, index) => (
+                <option value={item.validValue} key={index}>
+                  {item.descr}
                 </option>
               ))
             )}
