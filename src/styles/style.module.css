@@ -4,4 +4,9 @@
     align-items: center;
     margin-bottom: 50px;
 }
+.align-start{
+    justify-content: start;
+    align-items: flex-start
+
+}
 
