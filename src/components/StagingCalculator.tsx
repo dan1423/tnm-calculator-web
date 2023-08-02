@@ -17,7 +17,7 @@ const StagingCalculator = () => {
     const [calculatedStage, setCalculatedStage] = useState('...');
 
 
-    useEffect(() => {
+    useEffect(() => { 
         fetch('https://dan1423-001-site1.btempurl.com/tnmstaging/diseases')
             .then(response => response.json())
             .then(data => {
@@ -30,13 +30,16 @@ const StagingCalculator = () => {
 
     const handleDiseaseSelect = (itemValue, index) => {
         setDropdownValue(itemValue);
+        setStagingData(null);
+        setCalculatedStage('...');
         if(itemValue == null || itemValue == '')return;
+       
         let currentDiseaseUrl = `https://dan1423-001-site1.btempurl.com/tnmstaging/staging-data-items-v2/${itemValue}/1`;
         fetch(currentDiseaseUrl) // Replace 'api' with the actual endpoint to fetch staging data
             .then(response => response.json())
             .then(data => {
                 setStagingData(data);
-                setItems(data.map(item => ({ label: item.ColumnTitle, value: item.ColumnName })));
+                //setItems(data.map(item => ({ label: item.ColumnTitle, value: item.ColumnName })));
             })
             .catch(error => {
                 console.error('Error fetching dropdown data:', error);
@@ -54,7 +57,6 @@ const StagingCalculator = () => {
             } else {
               list.push(updatedObject);
             }
-      
             return list;
           }
       
@@ -65,7 +67,6 @@ const StagingCalculator = () => {
       
           let partialUrl = stagingUrl;
           list.forEach((item, index) => {
-      
             partialUrl += `&${item.ColumnName}=${item.ValidValue}`;
           });
 
@@ -119,6 +120,7 @@ const StagingCalculator = () => {
 
                 <div style={{ margin: 20 }}>
                     {stagingData == null ? (
+                       
                         <StagingValueRow />
                     ) : (
                         stagingData.map((item, index) => (

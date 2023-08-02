@@ -1,11 +1,18 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { use, useState,useEffect } from 'react';
 import customStyle from "../styles/style.module.css"
 
 const StagingValueRow = ({ prop = null, handleStagingCriteriaSelect }) => {
+
   if(prop == null)return(<div></div>);
   const [dropdownValue, setDropdownValue] = useState(null);
   const [dropdownLabel, setDropdownLabel] = useState(null);
+
+  useEffect(() => {
+    setDropdownValue(null);
+    setDropdownLabel(null);
+  }, [prop]);
+
 
   const handleValueChange = (itemValue, index) => {
     setDropdownValue(itemValue);
