@@ -28,17 +28,9 @@ import TNMListItemV2 from './TNMListItemV2';
 export function StagingCalculatorV2() {
   const [open, setOpen] = React.useState(0);
   const[currentTNMList,setCurrentTNMList] = useState([]);
-  const handleTNMClick=(item)=>{
-    setCurrentTNMList(item);
-  };
-
-  const handleTNMItemClick=(item)=>{
-    console.log(item);
-  };
-
-  const handleOpen = (value) => {
-    setOpen(open === value ? 0 : value);
-  };
+  const [clickedItems, setClickedItems] = useState([]);
+ 
+  
 
   //disease select
   const [diseaseSites, setDiseaseSites] = useState(null);
@@ -48,6 +40,7 @@ export function StagingCalculatorV2() {
   const BASE_URL = "https://dan1423-001-site1.btempurl.com";
   const [stagingUrl, setStagingUrl] = useState("");
   const [stagingData, setStagingData] = useState(null);
+  const[stagingDataWithSelectedTNMs,setstagingDataWithSelectedTNMs] = useState([]);
   const [items, setItems] = useState([{ label: "loading", value: "...." }]);
   const [listOfStagingValues, setListOfStagingValues] = useState([]);
   const [calculatedStage, setCalculatedStage] = useState("...");
@@ -63,6 +56,20 @@ export function StagingCalculatorV2() {
       });
   }, []);
 
+
+  const handleTNMClick=(item,index)=>{
+    item.index = index;
+    setCurrentTNMList(item);
+  };
+
+  const handleTNMItemClick=(index,item)=>{
+   console.log(index,item);
+  };
+
+  const handleOpen = (value) => {
+    setOpen(open === value ? 0 : value);
+  };
+
   const handleDiseaseSelect = (itemValue, index) => {
     setDropdownValue(itemValue);
     setStagingData(null);
@@ -73,7 +80,8 @@ export function StagingCalculatorV2() {
     fetch(currentDiseaseUrl) // Replace 'api' with the actual endpoint to fetch staging data
       .then((response) => response.json())
       .then((data) => {
-        //console.log(data);
+       
+       
         setStagingData(data);
         //setItems(data.map(item => ({ label: item.ColumnTitle, value: item.ColumnName })));
       })
@@ -86,6 +94,9 @@ export function StagingCalculatorV2() {
       )
     );
   };
+
+ 
+ 
 
   return (
     <div className="h-screen flex">
@@ -123,34 +134,25 @@ export function StagingCalculatorV2() {
               <MenuItem>Loading...</MenuItem>
             ) : (
               stagingData.map((item, index) => (
-                <MenuItem  key={index} onClick={()=>handleTNMClick(stagingData[index].valueDescList)}>
+                <MenuItem  key={index} onClick={()=>handleTNMClick(stagingData[index].valueDescList,index)}>
                 {item.columnTitle}
                 </MenuItem>
               ))
             )}
-            {/* {stagingData == null ? (
-              <MenuItem>Loading...</MenuItem>
-            ) : (
-              stagingData.map((item, index) => (
-                <SubMenu label={item.columnTitle} key={index}>
-                  {stagingData[index].valueDescList.map((item2, index2) => (
-                    <MenuItem key={index2}>{item2.validValueId} - {item2.validValue} </MenuItem>
-                  ))}
-                </SubMenu>
-              ))
-            )} */}
+            
           </Menu>
         </Sidebar>
       </div>
       <div className="w-4/5 bg-gray-100 p-4 overflow-auto">
       {currentTNMList.length==0?(<p>...</p>):(
         currentTNMList.map((item2, index2) => (
-          <div key={index2} className=" hover:bg-sky-700 cursor-pointer" onClick={()=>handleTNMItemClick(item2)}>
+          <div key={index2} className=" hover:bg-sky-700 cursor-pointer" onClick={()=>handleTNMItemClick(item2,currentTNMList.index)}>
              <TNMListItemV2 key ={index2} prop={item2}/>
           </div>
-            //  <TNMListItemV2 key ={index2} prop={item2} onClick={()=>handleTNMItemClick(item2)}/>
           ))
       )}
+
+
       </div>
     </div>
   );
