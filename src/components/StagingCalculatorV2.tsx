@@ -26,11 +26,7 @@ import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import TNMListItemV2 from './TNMListItemV2';
 
 export function StagingCalculatorV2() {
-  const [open, setOpen] = React.useState(0);
   const[currentTNMList,setCurrentTNMList] = useState([]);
-  const [clickedItems, setClickedItems] = useState([]);
- 
-  
 
   //disease select
   const [diseaseSites, setDiseaseSites] = useState(null);
@@ -40,7 +36,8 @@ export function StagingCalculatorV2() {
   const BASE_URL = "https://dan1423-001-site1.btempurl.com";
   const [stagingUrl, setStagingUrl] = useState("");
   const [stagingData, setStagingData] = useState(null);
-  const[stagingDataWithSelectedTNMs,setstagingDataWithSelectedTNMs] = useState([]);
+  const[currentStagingDataIndex,setCurrentStagingDataIndex]=useState(-1);
+  const [stagingDataItems,setStagingDataItems]=useState(null);
   const [items, setItems] = useState([{ label: "loading", value: "...." }]);
   const [listOfStagingValues, setListOfStagingValues] = useState([]);
   const [calculatedStage, setCalculatedStage] = useState("...");
@@ -57,19 +54,67 @@ export function StagingCalculatorV2() {
   }, []);
 
 
-  const handleTNMClick=(item,index)=>{
-    item.index = index;
-    setCurrentTNMList(item);
+  const handleTNMClick=(index)=>{
+    setCurrentStagingDataIndex(index);
+    setCurrentTNMList(stagingDataItems[index]);
   };
 
-  const handleTNMItemClick=(index,item)=>{
-   console.log(index,item);
+  const handleTNMItemClick=(currentItem)=>{
+    let currentColumnName = stagingData[currentStagingDataIndex].columnName;
+    const newList = stagingData.map((item,index) => {
+      if (index === currentStagingDataIndex) {
+        const updatedItem = {
+          ...item,
+          selectedValidValueId: currentItem.validValueId,
+          selectedValidValue:currentItem.validValue
+        };
+        return updatedItem;
+      }
+      return item;
+    });
+
+    setStagingData(newList);
+    let obj = { ColumnName: currentColumnName, ValidValue: currentItem.validValue };
+    handleStagingCriteriaSelect(obj);
   };
 
-  const handleOpen = (value) => {
-    setOpen(open === value ? 0 : value);
-  };
 
+  
+  const handleStagingCriteriaSelect = (obj) => {
+    const updateList = (list = [], updatedObject) => {
+        const index = list.findIndex(item => item.ColumnName === updatedObject.ColumnName);
+        if (index !== -1) {
+          list.splice(index, 1, updatedObject);
+        } else {
+          list.push(updatedObject);
+        }
+        return list;
+      }
+  
+  
+      let list = listOfStagingValues;
+      list = updateList(list, obj);
+      setListOfStagingValues(list);
+  
+      let partialUrl = stagingUrl;
+      list.forEach((item, index) => {
+        partialUrl += `&${item.ColumnName}=${item.ValidValue}`;
+      });
+      fetch(partialUrl)
+        .then(response => response.text())
+        .then(data => {
+          if (data.includes('The given data does not a produce a stage')) {
+           setCalculatedStage('...');
+           return;
+          }
+          setCalculatedStage(data);
+        })
+        .catch(error => {
+          console.error('Error fetching dropdown data:', error);
+        });
+};
+
+  
   const handleDiseaseSelect = (itemValue, index) => {
     setDropdownValue(itemValue);
     setStagingData(null);
@@ -83,7 +128,11 @@ export function StagingCalculatorV2() {
        
        
         setStagingData(data);
-        //setItems(data.map(item => ({ label: item.ColumnTitle, value: item.ColumnName })));
+        let simpArr = [];
+        data.forEach(element => {
+          simpArr.push(element.valueDescList);
+        });
+        setStagingDataItems(simpArr);  
       })
       .catch((error) => {
         console.error("Error fetching dropdown data:", error);
@@ -94,9 +143,6 @@ export function StagingCalculatorV2() {
       )
     );
   };
-
- 
- 
 
   return (
     <div className="h-screen flex">
@@ -134,19 +180,23 @@ export function StagingCalculatorV2() {
               <MenuItem>Loading...</MenuItem>
             ) : (
               stagingData.map((item, index) => (
-                <MenuItem  key={index} onClick={()=>handleTNMClick(stagingData[index].valueDescList,index)}>
-                {item.columnTitle}
+                <MenuItem  key={index} onClick={()=>handleTNMClick(index)}>
+                <span className="font-bold">{item.columnTitle}</span>
+                {item.selectedValidValueId==null?"":","}
+                <span  className="italic ml-2 mr-2">{item.selectedValidValueId==null?"":item.selectedValidValueId}</span>-
+                 <span className="italic"> {item.selectedValidValue==null?"":item.selectedValidValue}</span>
                 </MenuItem>
               ))
             )}
             
           </Menu>
+          <div className="text-2xl">Staging Result - {calculatedStage}</div>
         </Sidebar>
       </div>
       <div className="w-4/5 bg-gray-100 p-4 overflow-auto">
       {currentTNMList.length==0?(<p>...</p>):(
         currentTNMList.map((item2, index2) => (
-          <div key={index2} className=" hover:bg-sky-700 cursor-pointer" onClick={()=>handleTNMItemClick(item2,currentTNMList.index)}>
+          <div key={index2} className=" hover:bg-sky-700 cursor-pointer" onClick={()=>handleTNMItemClick(item2)}>
              <TNMListItemV2 key ={index2} prop={item2}/>
           </div>
           ))
