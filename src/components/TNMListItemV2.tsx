@@ -4,15 +4,14 @@ import customStyle from "../styles/style.module.css"
 
 function TNMListItemV2(prop=null) {
   return (
-    <div style={styles.container} >
+    <div style={styles.container} className="rounded-lg">
       <div style={{ flex: 2,paddingRight:20}} className={customStyle.column}>
-        <p style={styles.textSize}>{prop == null ? '' : prop.prop.validValueId}</p>
+        <p style={styles.textSize} className="pl-2">{prop == null ? '' : prop.prop.validValueId}</p>
       </div>
       <div style={{ flex: 10}} className={customStyle.column}>
        
         <div style={{ justifyContent: 'center', alignItems: 'center',height:'80%' }}>
-          
-          <p style={{overflow:'auto',marginTop:2,backgroundColor: '#191970',height:100,padding:10,color:'#fff'}}>
+          <p>
             {prop.prop.descr}
           </p>
         </div>

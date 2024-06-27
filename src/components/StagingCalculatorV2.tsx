@@ -119,15 +119,15 @@ export function StagingCalculatorV2() {
     setDropdownValue(itemValue);
     setStagingData(null);
     setCalculatedStage("...");
+    
     if (itemValue == null || itemValue == "") return;
 
     let currentDiseaseUrl = `https://dan1423-001-site1.btempurl.com/tnmstaging/staging-data-items-v2/${itemValue}/1`;
     fetch(currentDiseaseUrl) // Replace 'api' with the actual endpoint to fetch staging data
       .then((response) => response.json())
       .then((data) => {
-       
-       
         setStagingData(data);
+        
         let simpArr = [];
         data.forEach(element => {
           simpArr.push(element.valueDescList);
@@ -145,7 +145,9 @@ export function StagingCalculatorV2() {
   };
 
   return (
-    <div className="h-screen flex">
+    <div>
+      <nav class="w-full fixed top-0 z-50 grid  place-items-center text-2xl font-bold bg-blue-700 text-white">{calculatedStage==="..."?"Staging Result Goes Here...":"Staging Result : "+calculatedStage}</nav>
+       <div className="h-screen flex">
       <div className="w-1/5 bg-gray-200 p-4">
         <div>
           <label className="block mb-2 text-base font-medium text-gray-900 dark:text-white">
@@ -180,23 +182,26 @@ export function StagingCalculatorV2() {
               <MenuItem>Loading...</MenuItem>
             ) : (
               stagingData.map((item, index) => (
-                <MenuItem  key={index} onClick={()=>handleTNMClick(index)}>
+                <div  key={index} className="hover:bg-blue-700 hover:text-white">
+                    <MenuItem  key={index} onClick={()=>handleTNMClick(index)}>
                 <span className="font-bold">{item.columnTitle}</span>
                 {item.selectedValidValueId==null?"":","}
-                <span  className="italic ml-2 mr-2">{item.selectedValidValueId==null?"":item.selectedValidValueId}</span>-
+                <span  className="italic ml-2 mr-2">{item.selectedValidValueId==null?"":item.selectedValidValueId+" -"}</span>
                  <span className="italic"> {item.selectedValidValue==null?"":item.selectedValidValue}</span>
                 </MenuItem>
+                </div>
+             
               ))
             )}
             
           </Menu>
-          <div className="text-2xl">Staging Result - {calculatedStage}</div>
+         
         </Sidebar>
       </div>
       <div className="w-4/5 bg-gray-100 p-4 overflow-auto">
       {currentTNMList.length==0?(<p>...</p>):(
         currentTNMList.map((item2, index2) => (
-          <div key={index2} className=" hover:bg-sky-700 cursor-pointer" onClick={()=>handleTNMItemClick(item2)}>
+          <div key={index2} className="hover:bg-blue-700 hover:text-white cursor-pointer rounded-lg shadow-xl" onClick={()=>handleTNMItemClick(item2)}>
              <TNMListItemV2 key ={index2} prop={item2}/>
           </div>
           ))
@@ -205,5 +210,7 @@ export function StagingCalculatorV2() {
 
       </div>
     </div>
+    </div>
+   
   );
 }
