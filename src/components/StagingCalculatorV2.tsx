@@ -23,7 +23,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import TNMListItemV2 from './TNMListItemV2';
+import TNMListItemV3 from './TNMListItemV3';
 
 export function StagingCalculatorV2() {
   const[currentTNMList,setCurrentTNMList] = useState([]);
@@ -41,6 +41,7 @@ export function StagingCalculatorV2() {
   const [items, setItems] = useState([{ label: "loading", value: "...." }]);
   const [listOfStagingValues, setListOfStagingValues] = useState([]);
   const [calculatedStage, setCalculatedStage] = useState("...");
+  const [pickColor, setPickColor] = useState("#1d4ed8");
 
   useEffect(() => {
     fetch("https://dan1423-001-site1.btempurl.com/tnmstaging/diseases")
@@ -108,10 +109,21 @@ export function StagingCalculatorV2() {
            return;
           }
           setCalculatedStage(data);
+          setPickColor("#FF0000");
+          setTimeout(function (){
+            setPickColor("#1d4ed8");     
+          }, 2000); 
+        
         })
         .catch(error => {
           console.error('Error fetching dropdown data:', error);
         });
+};
+
+const ChangeColorOfNav=(e)=>{
+  console.log(e);
+//   const newColor = buttonColor === green ? yellow : green;
+// e.target.style.backgroundColor = newColor;
 };
 
   
@@ -143,10 +155,10 @@ export function StagingCalculatorV2() {
       )
     );
   };
-
+  
   return (
     <div>
-      <nav class="w-full fixed top-0 z-50 grid  place-items-center text-2xl font-bold bg-blue-700 text-white">{calculatedStage==="..."?"Staging Result Goes Here...":"Staging Result : "+calculatedStage}</nav>
+      <nav  className="w-full fixed top-0 z-50 grid  place-items-center text-2xl font-bold  text-white"  style={{backgroundColor: pickColor}} >{calculatedStage==="..."?"Staging Result Goes Here...":"Staging Result : "+calculatedStage}</nav>
        <div className="h-screen flex">
       <div className="w-1/5 bg-gray-200 p-4">
         <div>
@@ -198,11 +210,11 @@ export function StagingCalculatorV2() {
          
         </Sidebar>
       </div>
-      <div className="w-4/5 bg-gray-100 p-4 overflow-auto">
+      <div className="w-4/5 bg-gray-100 p-4 overflow-auto grid grid-cols-4 gap-2">
       {currentTNMList.length==0?(<p>...</p>):(
         currentTNMList.map((item2, index2) => (
-          <div key={index2} className="hover:bg-blue-700 hover:text-white cursor-pointer rounded-lg shadow-xl" onClick={()=>handleTNMItemClick(item2)}>
-             <TNMListItemV2 key ={index2} prop={item2}/>
+          <div key={index2} className="hover:bg-blue-700 hover:text-white cursor-pointer rounded-lg shadow-xl pl-2 pr-2" onClick={()=>handleTNMItemClick(item2)}>
+             <TNMListItemV3 key ={index2} prop={item2}/>
           </div>
           ))
       )}
@@ -210,6 +222,7 @@ export function StagingCalculatorV2() {
 
       </div>
     </div>
+    
     </div>
    
   );
